@@ -20,12 +20,9 @@ def main():
     updater.idle()
 
 def start(bot, update):
-    reply_keyboard = [['Payment']]
-    text_file_path = 'texts/start.txt'
-    with open(text_file_path) as text_file:
-        text = text_file.read()
+    text = 'Bot started'
     logging.info('User command: start')
-    update.message.reply_text(text, reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True))
+    update.message.reply_text(text)
 
 # def talk_with_user(bot,update):
 #     user_text1 = update.message.text
