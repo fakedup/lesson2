@@ -2,17 +2,13 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from time import gmtime, strftime
 import logging
-import fincalc
+import settings
 
 logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
     level=logging.INFO,
     filename='bot.log')
 
-token_file_path = 'token/token.txt'
-
-with open(token_file_path) as token_file:
-    token = token_file.read()
-
+token_file_path = settings.TELEGRAM_API_KEY
 
 def main():
     updater = Updater(token)

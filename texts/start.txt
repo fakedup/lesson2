@@ -1,1 +1,0 @@
-Bot to calculate credit parameters: amount, payment, rate or term.

@@ -1,3 +1,11 @@
+'''
+При помощи функции get_answer() отвечать на вопросы пользователя в ask_user(), пока он не скажет “Пока!”
+
+Переписать функцию ask_user(), добавив обработку exception-ов
+Добавить перехват ctrl+C и прощание
+'''
+
+
 from random import randint
 from json import load
 
