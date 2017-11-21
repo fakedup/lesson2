@@ -8,7 +8,7 @@ logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
     level=logging.INFO,
     filename='bot.log')
 
-token_file_path = settings.TELEGRAM_API_KEY
+token = settings.TELEGRAM_API_KEY
 
 def main():
     updater = Updater(token)
