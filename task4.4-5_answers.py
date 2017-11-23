@@ -9,9 +9,9 @@
 from random import randint
 from json import load
 
-answers_file = 'answers.json'
+ANSWERS_FILE = 'answers.json'
 
-with open(answers_file) as a_file:
+with open(ANSWERS_FILE) as a_file:
   answers = load(a_file)
 
 def get_answer(question, answers = answers):
@@ -24,13 +24,13 @@ def get_answer(question, answers = answers):
 
 
 def ask_user():
-	user_answer=''
-	while user_answer!='Пока!':
-		try:
-			user_answer = input('Bot: Ну что?\n')
-			print ('Bot:',get_answer(user_answer))
-		except KeyboardInterrupt:
-			print (get_answer('Пока!'))
-			break
+    user_answer=''
+    while user_answer!='Пока!':
+        try:
+            user_answer = input('Bot: Ну что?\n')
+            print ('Bot:',get_answer(user_answer))
+        except KeyboardInterrupt:
+            print (get_answer('Пока!'))
+            break
 
 ask_user()

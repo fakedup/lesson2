@@ -7,8 +7,9 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters, Conve
 from telegram import ReplyKeyboardMarkup, ReplyKeyboardRemove
 from time import gmtime, strftime
 import logging
-import settings #тут токен
+import settings  # тут токен
 import ephem
+from textwrap import dedent
 
 logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
     level=logging.INFO,
@@ -16,7 +17,7 @@ logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
 
 token = settings.TELEGRAM_API_KEY
 
-PLANET_ENTER = 1 #константа для входа в функцию расчета
+PLANET_ENTER = 1  # константа для входа в функцию расчета
 
 def main():
     updater = Updater(token)
@@ -41,13 +42,11 @@ def main():
     updater.idle()
 
 def start(bot, update):
-    text = (
-'''
-This is astrology bot. It can say in which constellation there is any solar system planet.
+    text = dedent('''\
+    This is astrology bot. It can say in which constellation there is any solar system planet.
 
-Enter command /planet to start computation.
-''')
-    reply_keyboard = [['/planet']] #кнопка, чтобы не вводить команду вручную
+    Enter command /planet to start computation.''')
+    reply_keyboard = [['/planet']]  # кнопка, чтобы не вводить команду вручную
     logging.info('User command: start')
     update.message.reply_text(text, reply_markup=ReplyKeyboardMarkup(reply_keyboard, one_time_keyboard=True)) #кнопка добавляется
 
@@ -73,15 +72,15 @@ def get_planet_constellation(bot, update):
     planet_name = update.message.text
             
     if planet_name.lower() in planets.keys():
-        planet = planets[planet_name.lower()]()
-        planet.compute()
+        planet = planets[planet_name.lower()]()  # создается объект по введенному названию планеты
+        planet.compute()  # расчет положения в созвездии
         update.message.reply_text ('{} is now in {}.'.format(planet.name, ephem.constellation(planet)[1]))
-        return ConversationHandler.END
+        return ConversationHandler.END  # завершение диалога
     else:
         text = 'Please enter correct planet name (except of Earth) or /cancel.'
         update.message.reply_text(text)
-        return PLANET_ENTER #типа go to заново
+        return PLANET_ENTER  # типа go to заново
 
-if __name__ = '__main__':
+if __name__ == '__main__':
 
     main()
