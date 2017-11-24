@@ -15,10 +15,10 @@ with open(ANSWERS_FILE) as a_file:
   answers = load(a_file)
 
 def get_answer(question, answers = answers):
-  answers_list = answers.get(question.lower())
   try:
+    answers_list = answers.get(question.lower())
     answer = answers_list[randint(0,len(answers_list)-1)]
-  except IndexError:
+  except TypeError:
     answer = 'Я тебя не понимаю'
   return answer
 
