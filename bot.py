@@ -10,6 +10,8 @@ import logging
 import settings  # тут токен
 import ephem
 from textwrap import dedent
+import re
+from collections import Counter
 
 logging.basicConfig(format='%(name)s - %(levelname)s - %(message)s',
     level=logging.INFO,
@@ -80,6 +82,7 @@ def get_planet_constellation(bot, update):
         text = 'Please enter correct planet name (except of Earth) or /cancel.'
         update.message.reply_text(text)
         return PLANET_ENTER  # типа go to заново
+
 
 if __name__ == '__main__':
 
