@@ -27,7 +27,7 @@ def main():
         FUNC_CHOICE:[   CommandHandler('wordcount', wordcount), 
                         CommandHandler('calc', calc),
                         RegexHandler(r'^(С|с)колько будет \w?', word_calc),
-                        RegexHandler(r'^(П|п)олнолуние после (\d{4})[/](\d{2})[/](\d{2})', full_moon),
+                        RegexHandler(r'^[Пп]олнолуние после (\d{4})/(\d{2})/(\d{2})', full_moon, pass_groups = True),
                         MessageHandler(Filters.text, unknown_message)
                     ]
         },
@@ -69,7 +69,7 @@ def calc(bot, update):
     Команда выполняет основные арифметические действия с числами, если прислать выражение вида 1+2=
     '''
     text = update.message.text
-    expression = re.search (r'[0-9]?(\+|\-|\*|\/)[0-9]?=$', text)   
+    expression = re.search (r'[0-9]+(\+|\-|\*|\/)[0-9]+=$', text)   
     if not expression:
         update.message.reply_text('Expression should be in the form: 2+2=')
     else:
@@ -111,13 +111,12 @@ def word_calc(bot, update):
         update.message.reply_text('На ноль делить нельзя!')
     return FUNC_CHOICE
 
-def full_moon(bot, update):
+def full_moon(bot, update, groups):
     '''
     Отвечает на вопрос: Полнолуние после 2016/10/01
     '''
-    text = update.message.text
-    datestring_obj = re.search('(\d{4})[/](\d{2})[/](\d{2})', text)
-    update.message.reply_text(str(ephem.next_full_moon(datestring_obj.group(0))))
+    datestring = '{}/{}/{}'.format(groups[0], groups[1], groups[2])
+    update.message.reply_text(str(ephem.next_full_moon(datestring)))
     return FUNC_CHOICE
 
 def unknown_message(bot, update):
