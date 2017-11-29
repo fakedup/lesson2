@@ -42,11 +42,14 @@ def main():
     updater.idle()
 
 def start(bot, update, user_data):
+    '''
+    Initiate lists of known cities, used cities and letter for user to call city
+    '''
     cities_list = []
     with open(cities_file_path, 'r', encoding = 'UTF-8') as cities_file_obj:
         for ln in cities_file_obj:
-            cities_list.append(ln.lower().rstrip())
-    in_game_cities_lists[update.message.from_user.id] = cities_list[:]
+            cities_list.append(ln.lower().rstrip())  # read from file in low register without new lines
+    in_game_cities_lists[update.message.from_user.id] = cities_list[:]  # copy list to ensure different lists for diferent users
     in_game_used_cities[update.message.from_user.id] = []
     in_game_letter_to_begin[update.message.from_user.id] = ''
     text = dedent('''
@@ -56,7 +59,9 @@ def start(bot, update, user_data):
     return GAME_TURN
 
 def turn(bot, update, user_data):
-    print (in_game_cities_lists[update.message.from_user.id])
+    '''
+    game turn: if user's city is suitable, call another city from list
+    '''
     user_city_attempt = update.message.text.lower()  # city that user calls
     if user_city_attempt in in_game_used_cities[update.message.from_user.id]:  # list of cities used in this game (with this user)
         update.message.reply_text ('Такой город уже был!')
@@ -72,25 +77,25 @@ def turn(bot, update, user_data):
         return GAME_TURN
     else:
         update.message.reply_text ('Принято.')
-        in_game_cities_lists[update.message.from_user.id].remove(user_city_attempt)
-        in_game_used_cities[update.message.from_user.id].append(user_city_attempt)
-        for city_element in in_game_cities_lists[update.message.from_user.id]:
+        in_game_cities_lists[update.message.from_user.id].remove(user_city_attempt)  # called city remove from list
+        in_game_used_cities[update.message.from_user.id].append(user_city_attempt)  # add it to used cities
+        for city_element in in_game_cities_lists[update.message.from_user.id]:  # check the list for new city
             if city_element[0] == user_city_attempt[-1]:
-                in_game_cities_lists[update.message.from_user.id].remove(city_element)
+                in_game_cities_lists[update.message.from_user.id].remove(city_element)  # the same for bot's city
                 in_game_used_cities[update.message.from_user.id].append(city_element)
                 in_game_letter_to_begin[update.message.from_user.id] = city_element[-1]
                 update.message.reply_text(city_element.capitalize())
-                return GAME_TURN
+                return GAME_TURN  # exit from loop without else block run
         else:
             update.message.reply_text('Ты победил, я не знаю больше городов!')
-            del in_game_letter_to_begin[update.message.from_user.id]
+            del in_game_letter_to_begin[update.message.from_user.id]  # clear lists for this user to free memory
             del in_game_used_cities[update.message.from_user.id]
             del in_game_cities_lists[update.message.from_user.id]
             return ConversationHandler.END
 
 
 def cancel(bot, update, user_data):
-    del in_game_letter_to_begin[update.message.from_user.id]
+    del in_game_letter_to_begin[update.message.from_user.id]  # clear the lists to free memory
     del in_game_used_cities[update.message.from_user.id]
     del in_game_cities_lists[update.message.from_user.id]
     update.message.reply_text('Good luck.')
